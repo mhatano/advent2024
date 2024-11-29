@@ -1,0 +1,2 @@
+jp.hatano.advent2024.providers.JapaneseMessageProvider
+jp.hatano.advent2024.providers.EnglishMessageProvider
