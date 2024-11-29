@@ -4,7 +4,7 @@ import java.io.*;
 
 public class AdventApp {
     public static void main(String[] args) {
-        AdventMessageProviderFactory factory = new AdventMessageProviderFactory("list.txt");
+        AdventMessageProviderFactory factory = new AdventMessageProviderFactory("jp.hatano.advent2024.providers");
         for ( AdventMessageProvider provider : factory ) {
             AdventApp application = new AdventApp(provider);
             application.sayHello(System.out);
