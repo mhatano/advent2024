@@ -23,6 +23,9 @@ public class AdventMessageProviderContainer implements AdventMessageProvider {
         if ( !instantiateSuccessful ) {
             return false;
         }
+        if ( methodGetHello != null ) {
+            return true;
+        }
         try {
             methodGetHello = aClass.getMethod("getHello",new Class<?>[] {});
         } catch (NoSuchMethodException | SecurityException e) {
