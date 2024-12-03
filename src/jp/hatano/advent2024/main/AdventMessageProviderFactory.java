@@ -26,7 +26,21 @@ public class AdventMessageProviderFactory implements Iterable<AdventMessageProvi
                         String filename = providerAbsolutePath.substring(providerAbsolutePath.lastIndexOf(File.separatorChar)+1);
                         String className = packageName + "." + filename.replace(".class","");
                         Class<?> aClass = Class.forName(className);
-                        listProviders.add((AdventMessageProvider) aClass.getConstructor(new Class[]{}).newInstance(new Object[]{}));
+                        Class<?>[] interfaces = aClass.getInterfaces();
+                        boolean interfaceFound = false;
+                        for ( Class<?> anInterface : interfaces ) {
+                            if ( anInterface.getName().equals("jp.hatano.advent2024.main.AdventMessageProvider") ) {
+                                listProviders.add((AdventMessageProvider) aClass.getConstructor(new Class[] {}).newInstance(new Object[] {}));
+                                interfaceFound = true;
+                                break;
+                            }
+                        }
+                        if ( !interfaceFound ) {
+                            AdventMessageProviderContainer container = new AdventMessageProviderContainer(aClass);
+                            if ( container.applicable() ) {
+                                listProviders.add(container);
+                            }
+                        }
                     }
                 }
             }
