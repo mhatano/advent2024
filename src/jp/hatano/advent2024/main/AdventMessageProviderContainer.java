@@ -28,7 +28,7 @@ public class AdventMessageProviderContainer implements AdventMessageProvider {
     private Method methodGetEnglishLanguageName = null;
 
     public boolean applicable() {
-        if ( anObject != null && methodGetHello != null && methodGetLanguageName != null && methodGetEnglishLanguageName != null ) {
+        if ( instantiateSuccessful && anObject != null && methodGetHello != null && methodGetLanguageName != null && methodGetEnglishLanguageName != null ) {
             return true;
         } else {
             try {
