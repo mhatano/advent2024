@@ -7,4 +7,14 @@ public class EnglishMessageProvider implements AdventMessageProvider {
     public String getHello() {
         return "Hello, World!";
     }
+
+    @Override
+    public String getLanguageName() {
+        return "English";
+    }
+
+    @Override
+    public String getEnglishLanguageName() {
+        return getLanguageName();
+    }
 }

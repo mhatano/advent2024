@@ -10,28 +10,43 @@ public class AdventMessageProviderContainer implements AdventMessageProvider {
     public AdventMessageProviderContainer(Class<?> aClass) {
         this.aClass = aClass;
         try {
-            anObject = aClass.getConstructor(new Class<?>[] {}).newInstance(new Object[] {});
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException e) {
+            anObject = aClass.getConstructor().newInstance();
+            methodGetHello = aClass.getMethod("getHello");
+            methodGetLanguageName = aClass.getMethod("getLanguageName");
+            methodGetEnglishLanguageName = aClass.getMethod("getEnglishLanguageName");
+        } catch ( InvocationTargetException | IllegalAccessException | InstantiationException | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
             instantiateSuccessful = false;
         }
+        if ( anObject != null && methodGetHello != null && methodGetLanguageName != null && methodGetEnglishLanguageName != null ) {
+            instantiateSuccessful = true;
+        }
+        instantiateSuccessful = false;
     }
 
     private Method methodGetHello = null;
+    private Method methodGetLanguageName = null;
+    private Method methodGetEnglishLanguageName = null;
 
     public boolean applicable() {
-        if ( !instantiateSuccessful ) {
-            return false;
+        if ( anObject != null && methodGetHello != null && methodGetLanguageName != null && methodGetEnglishLanguageName != null ) {
+            return true;
+        } else {
+            try {
+                if ( anObject == null ) anObject = aClass.getConstructor().newInstance();
+                if ( methodGetHello == null ) methodGetHello = aClass.getMethod("getHello");
+                if ( methodGetLanguageName == null ) methodGetLanguageName = aClass.getMethod("getLanguageName");
+                if ( methodGetEnglishLanguageName == null ) methodGetEnglishLanguageName = aClass.getMethod("getEnglishLanguageName");
+            } catch ( InvocationTargetException | IllegalAccessException | InstantiationException | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
+                instantiateSuccessful = false;
+                return false;
+            }
         }
-        if ( methodGetHello != null ) {
+        if ( anObject != null && methodGetHello != null && methodGetLanguageName != null && methodGetEnglishLanguageName != null ) {
+            instantiateSuccessful = true;
             return true;
         }
-        try {
-            methodGetHello = aClass.getMethod("getHello",new Class<?>[] {});
-        } catch (NoSuchMethodException | SecurityException e) {
-            return false;
-        }
-        return true;
+        instantiateSuccessful = false;
+        return false;
     }
 
     @Override
@@ -39,13 +54,41 @@ public class AdventMessageProviderContainer implements AdventMessageProvider {
         if ( methodGetHello == null && !applicable()) {
             return null;
         }
-        return getHello0();
-    }
-
-    private String getHello0() {
         if ( methodGetHello != null ) {
             try {
-                return (String) methodGetHello.invoke(anObject,new Object[] {});
+                return (String) methodGetHello.invoke(anObject);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getLanguageName() {
+        if ( methodGetLanguageName == null && !applicable() ) {
+            return null;
+        }
+        if ( methodGetLanguageName != null ) {
+            try {
+                return (String) methodGetLanguageName.invoke(anObject);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        System.err.println("method is null");
+        return null;
+    }
+
+    @Override
+    public String getEnglishLanguageName() {
+        if ( methodGetEnglishLanguageName == null && !applicable() ) {
+            return null;
+        }
+        if ( methodGetEnglishLanguageName != null ) {
+            try {
+                return (String) methodGetEnglishLanguageName.invoke(anObject);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 return null;
             }

@@ -7,4 +7,12 @@ public class JapaneseMessageProvider implements AdventMessageProvider {
     public String getHello() {
         return "こんにちは、世界";
     }
+    @Override
+    public String getLanguageName() {
+        return "日本語";
+    }
+    @Override
+    public String getEnglishLanguageName() {
+        return "Japanese";
+    }
 }
